@@ -1,0 +1,19 @@
+{
+  "name": "timezonebigle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/narviii/timeZoneBigle.git"
+  },
+  "author": "Vlad Sofronov",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/narviii/timeZoneBigle/issues"
+  },
+  "homepage": "https://github.com/narviii/timeZoneBigle#readme"
+}
