@@ -9,7 +9,7 @@ const googleMapsClient = require('@google/maps').createClient({
     Promise: Promise
   }); 
   
-//geoTz.preCache()
+geoTz.preCache()
 dotenv.config();
 
 console.log(process.env.BOT_TOKEN)
@@ -35,7 +35,7 @@ bot.command('time', (ctx) => {
         //console.log(ctx.from)
         locTime = DateTime.local().setZone(tz[0])
         
-        console.log(`${ctx.from.first_name} ${ctx.from.last_name} asked for time in ${tz[0]}: ${locTime.toLocaleString(DateTime.DATETIME_MED)}`)
+        console.log(`${DateTime.utc().toISO()} : ${ctx.from.first_name} ${ctx.from.last_name} asked for time in ${tz[0]}: ${locTime.toLocaleString(DateTime.DATETIME_MED)}`)
         ctx.reply(`Local time in ${tz[0]} timezone is ${locTime.toLocaleString(DateTime.DATETIME_MED)}`)
         
     })
