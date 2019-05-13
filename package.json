@@ -16,5 +16,15 @@
   "bugs": {
     "url": "https://github.com/narviii/timeZoneBigle/issues"
   },
-  "homepage": "https://github.com/narviii/timeZoneBigle#readme"
+  "homepage": "https://github.com/narviii/timeZoneBigle#readme",
+  "dependencies": {
+    "@google/maps": "^0.5.5",
+    "dotenv": "^8.0.0",
+    "geo-tz": "^5.0.4",
+    "install": "^0.12.2",
+    "luxon": "^1.13.2",
+    "npm": "^6.9.0",
+    "telegraf": "^3.29.0",
+    "telegraf-command-parts": "^1.0.3"
+  }
 }
