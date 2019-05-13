@@ -9,7 +9,7 @@ const googleMapsClient = require('@google/maps').createClient({
     Promise: Promise
   }); 
   
-geoTz.preCache()
+//geoTz.preCache()
 dotenv.config();
 
 console.log(process.env.BOT_TOKEN)
