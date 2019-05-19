@@ -1,6 +1,8 @@
 const Telegraf = require('telegraf')
+const TelegrafLogger = require('telegraf-logger');
 const dotenv = require('dotenv')
 const session = require('telegraf/session');
+
 const chrono = require('chrono-node')
 dotenv.config();
 const geoTz = require('geo-tz')
@@ -17,7 +19,20 @@ setTZ('UTC')
 dotenv.config();
 
 const bot = new Telegraf(process.env.BOT_TOKEN)
+
+const logger = new TelegrafLogger({
+    //log: AwesomeLogger.log, // default: console.log
+    // replace or remove placeholders as necessary
+    format: '%ut => @%u %fn %ln (%fi): <%ust> %c', // default
+    contentLength: 100, // default
+  }); // All the default values can be omitted
+
+bot.use(logger.middleware());  
 bot.use(commandParts());
+
+
+
+
 bot.use(session())
 
 bot.start((ctx) => {
@@ -48,7 +63,7 @@ bot.command('time', (ctx) => {
 
         locTime = DateTime.local().setZone(tz[0])
         
-        console.log(`${DateTime.utc().toISO()} : ${ctx.from.first_name} ${ctx.from.last_name} asked for time in ${tz[0]}: ${locTime.toLocaleString(DateTime.DATETIME_MED)}`)
+        //console.log(`${DateTime.utc().toISO()} : ${ctx.from.first_name} ${ctx.from.last_name} asked for time in ${tz[0]}: ${locTime.toLocaleString(DateTime.DATETIME_MED)}`)
         ctx.reply(`Local time in *${tz[0]}* timezone is *${locTime.toLocaleString(DateTime.TIME_SIMPLE)}* ${locTime.toLocaleString(DateTime.DATE_MED)}`,{parse_mode:'Markdown'})
         
     })
@@ -67,16 +82,13 @@ bot.on('location',(ctx)=>{
 
 
 bot.command('what',(ctx) => {
-    splitArgs = ctx.state.command.splitArgs
-    
+    splitArgs = ctx.state.command.splitArgs 
     argPlace = splitArgs.pop()
-    argTime = splitArgs.join(' ')
-    
+    argTime = splitArgs.join(' ')  
     if(ctx.session.timezone === undefined){
         ctx.reply(`Please tell me where you are with a /my command. Example : /my vancouver`)
         return
-    }
-    
+    }   
     try {  
         parsedTime=chrono.parse(argTime)
         
@@ -85,16 +97,10 @@ bot.command('what',(ctx) => {
         ctx.reply(`Didn't get it. Try /help for list of commands`)
         return
     }
-    
-    
-    //a = parsedTime[0].start.date().toISOString()
-    //console.log(a)
-    //stripedTime = a//.substring(0,19) // striping TZ info(last digits) from ISO string to get time which user asks for
-    console.log(DateTime.local().toLocaleString(DateTime.DATETIME_HUGE))
-    reqTime = DateTime.fromISO(parsedTime[0].start.date().toISOString()) //adding TZ info which user stated
+    reqTime = DateTime.fromISO(parsedTime[0].start.date().toISOString()) 
     reqTimeRezoned =reqTime.setZone(ctx.session.timezone, { keepLocalTime: true });
     getZone(argPlace).then((tz) => {
-        ctx.reply(`It is *${reqTimeRezoned.setZone(tz[0]).toLocaleString(DateTime.TIME_SIMPLE)}* ${reqTimeRezoned.setZone(tz[0]).toLocaleString(DateTime.DATE_MED)} in ${tz[0]} when it is *${reqTimeRezoned.toLocaleString(DateTime.TIME_SIMPLE)}* ${reqTimeRezoned.toLocaleString(DateTime.DATE_MED)} at ${ctx.session.timezone}`,{parse_mode:'Markdown'})
+        ctx.reply(`It is *${reqTimeRezoned.setZone(tz[0]).toLocaleString(DateTime.TIME_SIMPLE)}* ${reqTimeRezoned.setZone(tz[0]).toLocaleString({ month: 'short', day: 'numeric' })} in ${tz[0]} when it is *${reqTimeRezoned.toLocaleString(DateTime.TIME_SIMPLE)}* ${reqTimeRezoned.toLocaleString({ month: 'short', day: 'numeric' })} at ${ctx.session.timezone}`,{parse_mode:'Markdown'})
     }).catch(() => {
         ctx.reply(`Didn't get it. Try /help for list of commands`)
     })
@@ -109,6 +115,7 @@ bot.command('my',(ctx) =>{
             ctx.reply('Something gone wrong! Maybe wrong place?')
         })
 })
+
 
 
 

@@ -30,6 +30,8 @@
     "set-tz": "^0.1.0",
     "sugar": "^2.0.6",
     "telegraf": "^3.29.0",
-    "telegraf-command-parts": "^1.0.3"
+    "telegraf-command-parts": "^1.0.3",
+    "telegraf-logger": "^3.0.0",
+    "telegraf-session-local": "0.0.7"
   }
 }
