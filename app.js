@@ -36,12 +36,19 @@ bot.use(commandParts());
 bot.use(session())
 
 bot.start((ctx) => {
-    ctx.reply('Welcome to Time Bot. Type /time command followed by place to get local time for that place. Try "/time tokyo"');
+    ctx.reply(`Welcome to Time Bot. 
+/help for the list of commands.
+/time command followed by place to get local time for that place. Like /time tokyo
+/my followed by name of the place you are in to set your location. Like /my vancouver
+/what followed by time and name of the city and the time. Like /what 6pm tokyo and it will tell you what time will be at tokyo when it's 6pm in your location.`)
     
     })
 
 bot.help((ctx) => {
-    ctx.reply('/time command followed by place to get local time for that place. Try /time tokyo')
+    ctx.replyWithMarkdown(`/time followed by place to get local time for that place. Like /time tokyo
+/my followed by name of the place you are in to set your location. Like /my vancouver
+/what followed by time and name of the city and the time. Like /what 6pm tokyo and it will tell you what time will be at tokyo when it's 6pm in your location.`)
+    
 })
 
 async function getZone(place) {
