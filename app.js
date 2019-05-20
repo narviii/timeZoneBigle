@@ -98,9 +98,9 @@ bot.command('what',(ctx) => {
     }   
     try {  
         parsedTime=chrono.parse(argTime)
-        
-        
-    }catch{
+             
+    } catch(err) {
+        console.log(err)
         ctx.reply(`Didn't get it. Try /help for list of commands`)
         return
     }
