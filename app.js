@@ -62,7 +62,7 @@ bot.command('time', (ctx) => {
     utcCheck =  ctx.state.command.splitArgs[0].toUpperCase()
 
     if ( utcCheck == 'UTC'||utcCheck == 'GMT') {
-        ctx.reply(DateTime.local().toLocaleString(DateTime.DATETIME_HUGE))
+        ctx.reply(DateTime.local().toLocaleString(DateTime.DATETIME_HUGE)).catch((err)=>console.log(err))
         return
     }
     let response = googleMapsClient.geocode({address: ctx.state.command.args}).asPromise()
@@ -72,11 +72,11 @@ bot.command('time', (ctx) => {
         locTime = DateTime.local().setZone(tz[0])
         
         //console.log(`${DateTime.utc().toISO()} : ${ctx.from.first_name} ${ctx.from.last_name} asked for time in ${tz[0]}: ${locTime.toLocaleString(DateTime.DATETIME_MED)}`)
-        ctx.reply(`Local time in *${tz[0]}* timezone is *${locTime.toLocaleString(DateTime.TIME_SIMPLE)}* ${locTime.toLocaleString(DateTime.DATE_MED)}`,{parse_mode:'Markdown'})
+        ctx.reply(`Local time in *${tz[0]}* timezone is *${locTime.toLocaleString(DateTime.TIME_SIMPLE)}* ${locTime.toLocaleString(DateTime.DATE_MED)}`,{parse_mode:'Markdown'}).catch((err)=>console.log(err))
         
     })
         .catch(() => {
-            ctx.reply('Something gone wrong! Maybe wrong place?')
+            ctx.reply('Something gone wrong! Maybe wrong place?').catch((err)=>console.log(err))
         })
     
 
@@ -85,7 +85,7 @@ bot.command('time', (ctx) => {
 bot.on('location',(ctx)=>{
     ctx.session.location=ctx.message.location
     ctx.session.timezone = geoTz(ctx.session.location.latitude,ctx.session.location.longitude)
-    ctx.reply(`Thanks ${ctx.from.first_name} for sharing your location. Your timezone is: ${ctx.session.timezone}`)
+    ctx.reply(`Thanks ${ctx.from.first_name} for sharing your location. Your timezone is: ${ctx.session.timezone}`).catch((err)=>console.log(err))
 })
 
 
@@ -94,7 +94,7 @@ bot.command('what',(ctx) => {
     argPlace = splitArgs.pop()
     argTime = splitArgs.join(' ')  
     if(ctx.session.timezone === undefined){
-        ctx.reply(`Dear ${ctx.from.first_name} please tell me where you are with a /my command. Example : /my vancouver`);
+        ctx.replyWithMarkdown(`*${ctx.from.first_name}!* please tell me where you are with a /my command. Example : /my vancouver`).catch((err)=>console.log(err))
         return;
     }   
     try {  
@@ -110,8 +110,11 @@ bot.command('what',(ctx) => {
     
     getZone(argPlace).then((tz) => {
         respTime = reqTimeRezoned.setZone(tz[0])
-        //console.log(tz)
-        ctx.reply(`It is ${respTime.toLocaleString(DateTime.TIME_SIMPLE)} ${respTime.toLocaleString({ month: 'short', day: 'numeric' })} in ${tz[0]} when it is ${reqTimeRezoned.toLocaleString(DateTime.TIME_SIMPLE)} ${reqTimeRezoned.toLocaleString({ month: 'short', day: 'numeric' })} at ${ctx.session.timezone}`)
+        a=respTime.toLocaleString(DateTime.TIME_SIMPLE)
+        b=respTime.toLocaleString({ month: 'short', day: 'numeric' })
+        c=reqTimeRezoned.toLocaleString(DateTime.TIME_SIMPLE)
+        d=reqTimeRezoned.toLocaleString({ month: 'short', day: 'numeric' })
+        ctx.replyWithHTML(`It is <b>${a}</b> ${b} in ${tz[0]} when it is <b>${c}</b> ${d} at ${ctx.session.timezone}`).catch((err)=>console.log(err))
         //ctx.reply(`It is *${respTime.toLocaleString(DateTime.TIME_SIMPLE)}* ${respTime.toLocaleString({ month: 'short', day: 'numeric' })} in ${tz[0]} when it is *${reqTimeRezoned.toLocaleString(DateTime.TIME_SIMPLE)}* ${reqTimeRezoned.toLocaleString({ month: 'short', day: 'numeric' })} at ${ctx.session.timezone}`,{parse_mode:'Markdown'})
     }).catch((err) => {
         console.log(err)
